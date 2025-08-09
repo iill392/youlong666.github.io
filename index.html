@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万能工具箱</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#007AFF', // 主色调：iOS蓝色
+                        secondary: '#34C759', // 辅助色：iOS绿色
+                        accent: '#AF52DE', // 强调色：紫色
+                        dark: '#1C1C1E', // 深色背景
+                        light: '#F5F5F7', // 浅色背景
+                        'ios-gray': '#8E8E93', // 灰色文字
+                        'ios-card': '#FFFFFF', // 卡片背景
+                        'ios-highlight': '#EFEFF4', // 高亮背景
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .ios-transition {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .card-shadow {
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            .card-hover {
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            .card-hover:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+</head>
+<body class="bg-light min-h-screen font-sans text-dark">
+    <!-- 所有页面容器 -->
+    <div id="app-container">
+        <!-- 主页面 -->
+        <div id="home-page" class="min-h-screen">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa fa-wrench text-primary text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">游龙工具箱</h1>
+                    </div>
+                    <button id="mobile-menu-btn" class="md:hidden text-ios-gray hover:text-primary ios-transition">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#" class="text-primary font-medium transition-colors" data-page="home-page">首页</a>
+                        <a href="#" class="text-ios-gray hover:text-primary transition-colors" data-page="about-page">关于</a>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- 移动端菜单 -->
+            <div id="mobile-menu" class="fixed inset-0 bg-dark/50 backdrop-blur-sm z-40 hidden md:hidden">
+                <div class="bg-white h-full w-64 p-4 transform transition-transform duration-300 -translate-x-full" id="mobile-menu-content">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-semibold text-dark">菜单</h2>
+                        <button id="close-menu-btn" class="text-ios-gray hover:text-primary">
+                            <i class="fa fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <nav class="flex flex-col space-y-4">
+                        <a href="#" class="text-primary font-medium transition-colors py-2 border-b border-gray-100" data-page="home-page">首页</a>
+                        <a href="#" class="text-ios-gray hover:text-primary transition-colors py-2" data-page="about-page">关于</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <!-- 欢迎区域 -->
+                <section class="mb-12 text-center">
+                    <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4 text-dark">强大实用的多功能工具箱</h2>
+                    <p class="text-ios-gray max-w-2xl mx-auto text-lg">集合多种常用工具，满足您的各种需求，简单易用，功能强大</p>
+                </section>
+
+                <!-- 工具选择区域 -->
+                <section id="tools" class="mb-16">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <!-- 密码生成器 -->
+                        <div class="tool-card bg-ios-card rounded-2xl p-6 card-shadow card-hover cursor-pointer" data-page="password-generator-page">
+                            <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-key text-primary text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">密码生成器</h3>
+                            <p class="text-ios-gray text-sm">生成安全、随机的强密码，保护您的账户安全</p>
+                        </div>
+
+                        <!-- 计算器 -->
+                        <div class="tool-card bg-ios-card rounded-2xl p-6 card-shadow card-hover cursor-pointer" data-page="calculator-page">
+                            <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-calculator text-primary text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">计算器</h3>
+                            <p class="text-ios-gray text-sm">简洁实用的计算器，支持基本数学运算</p>
+                        </div>
+
+                        <!-- 随机图片生成 -->
+                        <div class="tool-card bg-ios-card rounded-2xl p-6 card-shadow card-hover cursor-pointer" data-page="random-image-page">
+                            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-picture-o text-accent text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">随机图片</h3>
+                            <p class="text-ios-gray text-sm">生成各种风格和尺寸的随机图片，满足设计需求</p>
+                        </div>
+
+                        <!-- 本地网盘 -->
+                        <div class="tool-card bg-ios-card rounded-2xl p-6 card-shadow card-hover cursor-pointer" data-page="cloud-storage-page">
+                            <div class="w-14 h-14 bg-secondary/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-cloud-upload text-secondary text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">本地网盘</h3>
+                            <p class="text-ios-gray text-sm">存储文件到本地，下次打开依然可见</p>
+                        </div>
+
+                        <!-- 单位转换器 -->
+                        <div class="tool-card bg-ios-card rounded-2xl p-6 card-shadow card-hover cursor-pointer" data-page="unit-converter-page">
+                            <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-exchange text-primary text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">单位转换器</h3>
+                            <p class="text-ios-gray text-sm">转换长度、重量、温度等各种单位</p>
+                        </div>
+
+                        <!-- 贪吃蛇游戏 -->
+                        <div class="tool-card bg-ios-card rounded-2xl p-6 card-shadow card-hover cursor-pointer" data-page="snake-game-page">
+                            <div class="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa fa-gamepad text-accent text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">贪吃蛇游戏</h3>
+                            <p class="text-ios-gray text-sm">经典贪吃蛇游戏，休闲娱乐的好选择</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="mb-4 md:mb-0">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa fa-wrench text-primary text-xl"></i>
+                                <span class="font-semibold text-lg">游龙工具箱</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mt-2">实用工具，便捷生活</p>
+                        </div>
+                        
+                        <div class="flex space-x-6">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fa fa-github text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fa fa-twitter text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                                <i class="fa fa-envelope text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2023 万能工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 密码生成器页面 -->
+        <div id="password-generator-page" class="min-h-screen hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-password">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-key text-primary text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">密码生成器</h1>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <div class="mb-8">
+                        <div class="bg-ios-highlight rounded-xl p-4 flex items-center mb-4">
+                            <input type="text" id="generated-password" class="flex-grow bg-transparent border-none outline-none text-lg font-mono" readonly>
+                            <button id="copy-password" class="ml-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 active:scale-95 ios-transition">
+                                <i class="fa fa-copy mr-2"></i>复制
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-ios-gray mb-2">密码长度</label>
+                                <div class="flex items-center">
+                                    <input type="range" id="password-length" min="8" max="32" value="16" class="w-full accent-primary">
+                                    <span id="length-value" class="ml-4 text-ios-gray min-w-[3rem] text-center">16</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="include-uppercase" checked class="mr-2 accent-primary">
+                                    <span>包含大写字母 (A-Z)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="include-lowercase" checked class="mr-2 accent-primary">
+                                    <span>包含小写字母 (a-z)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="include-numbers" checked class="mr-2 accent-primary">
+                                    <span>包含数字 (0-9)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="include-symbols" checked class="mr-2 accent-primary">
+                                    <span>包含特殊字符 (!@#$%)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button id="generate-password" class="mt-6 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl transition-all text-lg font-medium active:scale-95">
+                            <i class="fa fa-refresh mr-2"></i>生成密码
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2025 游龙工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 计算器页面 -->
+        <div id="calculator-page" class="min-h-screen hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-calculator">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-calculator text-primary text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">计算器</h1>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <div class="max-w-xs mx-auto">
+                        <div class="bg-ios-highlight rounded-xl p-4 mb-4">
+                            <input type="text" id="calc-display" class="w-full text-right bg-transparent border-none outline-none text-2xl font-medium py-2" readonly>
+                            <input type="text" id="calc-history" class="w-full text-right bg-transparent border-none outline-none text-sm text-ios-gray h-4" readonly>
+                        </div>
+                        
+                        <div class="grid grid-cols-4 gap-2">
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all" onclick="calcClear()">C</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all" onclick="calcOperator('±')">±</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-orange-500 hover:bg-orange-600 text-white transition-all" onclick="calcOperator('%')">%</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-primary hover:bg-primary/80 text-white transition-all" onclick="calcOperator('/')">÷</button>
+                            
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('7')">7</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('8')">8</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('9')">9</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-primary hover:bg-primary/80 text-white transition-all" onclick="calcOperator('*')">×</button>
+                            
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('4')">4</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('5')">5</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('6')">6</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-primary hover:bg-primary/80 text-white transition-all" onclick="calcOperator('-')">-</button>
+                            
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('1')">1</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('2')">2</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('3')">3</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-primary hover:bg-primary/80 text-white transition-all" onclick="calcOperator('+')">+</button>
+                            
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all col-span-2" onclick="calcNumber('0')">0</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 transition-all" onclick="calcNumber('.')">.</button>
+                            <button class="w-full h-12 rounded-lg text-xl font-medium bg-primary hover:bg-primary/80 text-white transition-all" onclick="calcEquals()">=</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2025 游龙工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 随机图片生成页面 -->
+        <div id="random-image-page" class="min-h-screen hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-random-image">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-picture-o text-accent text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">随机图片生成</h1>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-ios-gray mb-4">图片设置</h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-ios-gray mb-1">图片尺寸 (像素)</label>
+                                    <div class="flex space-x-2">
+                                        <div class="flex-1">
+                                            <input type="number" id="random-width" value="600" min="100" max="2000" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                        </div>
+                                        <span class="flex items-center text-ios-gray">:</span>
+                                        <div class="flex-1">
+                                            <input type="number" id="random-height" value="400" min="100" max="2000" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-ios-gray mb-1">图片类别</label>
+                                    <select id="image-category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                        <option value="">随机类别</option>
+                                        <option value="nature">自然风景</option>
+                                        <option value="city">城市建筑</option>
+                                        <option value="people">人物</option>
+                                        <option value="animals">动物</option>
+                                        <option value="food">食物</option>
+                                        <option value="tech">科技</option>
+                                        <option value="abstract">抽象</option>
+                                    </select>
+                                </div>
+                                
+                                <button id="generate-random-image" class="w-full bg-accent hover:bg-accent/90 text-white px-4 py-3 rounded-xl transition-all active:scale-95">
+                                    <i class="fa fa-random mr-2"></i>生成随机图片
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-ios-gray mb-2">生成的图片</h4>
+                            <div id="random-image-container" class="border border-gray-200 rounded-xl overflow-hidden bg-ios-highlight flex items-center justify-center min-h-[300px]">
+                                <p class="text-ios-gray text-center">图片将显示在这里</p>
+                            </div>
+                            
+                            <button id="download-random-image" class="w-full mt-4 bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-xl transition-all hidden active:scale-95">
+                                <i class="fa fa-download mr-2"></i>下载图片
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2023 万能工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 本地网盘页面 -->
+        <div id="cloud-storage-page" class="min-h-screen hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-cloud">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-cloud-upload text-secondary text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">本地网盘</h1>
+                    </div>
+                    <button id="upload-new-file" class="bg-secondary hover:bg-secondary/90 text-white px-4 py-2 rounded-lg transition-all active:scale-95">
+                        <i class="fa fa-plus mr-2"></i>上传文件
+                    </button>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <!-- 文件上传区域 -->
+                    <div id="file-upload-area" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center mb-8 hover:border-primary ios-transition">
+                        <input type="file" id="file-input" class="hidden" multiple>
+                        <label for="file-input" class="cursor-pointer">
+                            <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-cloud-upload text-secondary text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-medium mb-2">拖放文件到此处或点击上传</h3>
+                            <p class="text-ios-gray text-sm">支持上传图片、文档、音频等多种格式</p>
+                        </label>
+                    </div>
+                    
+                    <!-- 文件列表 -->
+                    <div id="file-list-container">
+                        <h3 class="text-lg font-medium mb-4">已保存的文件</h3>
+                        <div id="empty-state" class="text-center py-12">
+                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fa fa-folder-open text-ios-gray text-2xl"></i>
+                            </div>
+                            <p class="text-ios-gray">暂无保存的文件</p>
+                        </div>
+                        
+                        <div id="file-list" class="space-y-3 hidden">
+                            <!-- 文件项将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2025 游龙工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 单位转换器页面 -->
+        <div id="unit-converter-page" class="min-h-screen hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-unit">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-exchange text-primary text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">单位转换器</h1>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <div class="mb-6">
+                        <label class="block text-ios-gray mb-2">转换类型</label>
+                        <select id="conversion-type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                            <option value="length">长度</option>
+                            <option value="weight">重量</option>
+                            <option value="temperature">温度</option>
+                            <option value="area">面积</option>
+                            <option value="volume">体积</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-ios-gray mb-1">从</label>
+                            <div class="flex">
+                                <input type="number" id="from-value" value="1" class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                <select id="from-unit" class="px-3 py-2 border border-gray-300 border-l-0 rounded-r-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                    <!-- 选项将根据转换类型动态生成 -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-ios-gray mb-1">到</label>
+                            <div class="flex">
+                                <input type="number" id="to-value" readonly class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg bg-ios-highlight focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                <select id="to-unit" class="px-3 py-2 border border-gray-300 border-l-0 rounded-r-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none ios-transition">
+                                    <!-- 选项将根据转换类型动态生成 -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="convert-btn" class="mt-6 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl transition-all text-lg font-medium active:scale-95">
+                        <i class="fa fa-refresh mr-2"></i>转换
+                    </button>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2025 游龙工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 贪吃蛇游戏页面 -->
+        <div id="snake-game-page" class="min-h-screen hidden bg-light">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-snake">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-gamepad text-accent text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">贪吃蛇游戏</h1>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="bg-ios-highlight px-3 py-1 rounded-full mr-2">
+                            <span class="text-ios-gray font-medium">分数: </span>
+                            <span id="gameScore" class="text-primary font-semibold">0</span>
+                        </div>
+                        <button id="restartButtonNav" class="bg-primary/80 hover:bg-primary text-white px-3 py-1 rounded-lg text-sm transition-all active:scale-95">
+                            <i class="fa fa-refresh mr-1"></i>重置
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <div class="relative bg-dark/80 rounded-xl overflow-hidden shadow-2xl border border-white/10 mb-6">
+                        <canvas id="gameCanvas" class="w-full"></canvas>
+                        
+                        <div id="gameOver" class="absolute inset-0 bg-dark/80 backdrop-blur-sm flex flex-col items-center justify-center hidden">
+                            <h2 class="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500">游戏结束!</h2>
+                            <p class="text-xl mb-6">最终分数: <span id="finalScore" class="font-bold">0</span></p>
+                            <button id="restartButton" class="px-8 py-3 bg-gradient-to-r from-primary to-secondary rounded-full text-white font-bold shadow-lg hover:shadow-primary/30 hover:scale-105 transition-all duration-300 active:scale-95">
+                                <i class="fa fa-refresh mr-2"></i>重新开始
+                            </button>
+                        </div>
+                        
+                        <div id="gameStart" class="absolute inset-0 bg-dark/80 backdrop-blur-sm flex flex-col items-center justify-center">
+                            <h2 class="text-4xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">贪吃蛇游戏</h2>
+                            <button id="startButton" class="px-8 py-3 bg-gradient-to-r from-primary to-secondary rounded-full text-white font-bold shadow-lg hover:shadow-primary/30 hover:scale-105 transition-all duration-300 active:scale-95">
+                                <i class="fa fa-play mr-2"></i>开始游戏
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 控制提示 -->
+                    <div class="bg-ios-highlight p-4 rounded-xl mb-6">
+                        <h4 class="text-center font-semibold mb-3">控制方式</h4>
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="bg-gray-100 p-2 rounded-lg mb-1 cursor-pointer hover:bg-primary/10 transition-colors active:scale-95" onclick="changeDirection('up')">
+                                    <i class="fa fa-arrow-up text-primary text-xl"></i>
+                                </div>
+                                <span class="text-sm">上</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-gray-100 p-2 rounded-lg mb-1 cursor-pointer hover:bg-primary/10 transition-colors active:scale-95" onclick="changeDirection('down')">
+                                    <i class="fa fa-arrow-down text-primary text-xl"></i>
+                                </div>
+                                <span class="text-sm">下</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-gray-100 p-2 rounded-lg mb-1 cursor-pointer hover:bg-primary/10 transition-colors active:scale-95" onclick="changeDirection('left')">
+                                    <i class="fa fa-arrow-left text-primary text-xl"></i>
+                                </div>
+                                <span class="text-sm">左</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="bg-gray-100 p-2 rounded-lg mb-1 cursor-pointer hover:bg-primary/10 transition-colors active:scale-95" onclick="changeDirection('right')">
+                                    <i class="fa fa-arrow-right text-primary text-xl"></i>
+                                </div>
+                                <span class="text-sm">右</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 移动设备控制按钮 -->
+                    <div class="md:hidden flex justify-center items-center gap-2 my-6">
+                        <div class="flex flex-col items-center">
+                            <button id="mobile-up" class="w-12 h-12 md:w-14 md:h-14 bg-primary/80 hover:bg-primary text-white rounded-lg flex items-center justify-center shadow-lg active:scale-95 transition-all">
+                                <i class="fa fa-arrow-up"></i>
+                            </button>
+                            <div class="flex gap-2 mt-2">
+                                <button id="mobile-left" class="w-12 h-12 md:w-14 md:h-14 bg-primary/80 hover:bg-primary text-white rounded-lg flex items-center justify-center shadow-lg active:scale-95 transition-all">
+                                    <i class="fa fa-arrow-left"></i>
+                                </button>
+                                <button id="mobile-down" class="w-12 h-12 md:w-14 md:h-14 bg-primary/80 hover:bg-primary text-white rounded-lg flex items-center justify-center shadow-lg active:scale-95 transition-all">
+                                    <i class="fa fa-arrow-down"></i>
+                                </button>
+                                <button id="mobile-right" class="w-12 h-12 md:w-14 md:h-14 bg-primary/80 hover:bg-primary text-white rounded-lg flex items-center justify-center shadow-lg active:scale-95 transition-all">
+                                    <i class="fa fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2025 游龙工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <!-- 关于页面 -->
+        <div id="about-page" class="min-h-screen hidden">
+            <!-- 顶部导航栏 -->
+            <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50 transition-all duration-300" id="navbar-about">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="text-ios-gray hover:text-primary mr-2 ios-transition" onclick="navigateTo('home-page')">
+                            <i class="fa fa-arrow-left text-xl"></i>
+                        </button>
+                        <i class="fa fa-info-circle text-primary text-2xl"></i>
+                        <h1 class="text-xl md:text-2xl font-semibold text-dark">关于我们</h1>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 主内容区 -->
+            <main class="container mx-auto px-4 pt-24 pb-16">
+                <div class="bg-ios-card rounded-2xl p-6 md:p-8 card-shadow">
+                    <h3 class="text-2xl font-bold text-dark mb-4">关于游龙工具箱</h3>
+                    <p class="text-ios-gray mb-4">万能工具箱是一个集成了多种实用功能的在线工具集合，旨在为用户提供便捷、高效的工具服务。</p>
+                    <p class="text-ios-gray mb-6">所有工具均在本地运行，保护您的隐私安全。数据存储在您的设备上，确保信息不会丢失。游龙工具箱作者为【王金龙】</p>
+                    
+                    <h4 class="text-xl font-semibold text-dark mb-3">我们的功能</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-ios-highlight p-4 rounded-xl">
+                            <i class="fa fa-key text-primary mb-2"></i>
+                            <h5 class="font-medium">密码生成器</h5>
+                        </div>
+                        <div class="bg-ios-highlight p-4 rounded-xl">
+                            <i class="fa fa-calculator text-primary mb-2"></i>
+                            <h5 class="font-medium">计算器</h5>
+                        </div>
+                        <div class="bg-ios-highlight p-4 rounded-xl">
+                            <i class="fa fa-picture-o text-accent mb-2"></i>
+                            <h5 class="font-medium">随机图片</h5>
+                        </div>
+                        <div class="bg-ios-highlight p-4 rounded-xl">
+                            <i class="fa fa-cloud-upload text-secondary mb-2"></i>
+                            <h5 class="font-medium">本地网盘</h5>
+                        </div>
+                        <div class="bg-ios-highlight p-4 rounded-xl">
+                            <i class="fa fa-exchange text-primary mb-2"></i>
+                            <h5 class="font-medium">单位转换器</h5>
+                        </div>
+                        <div class="bg-ios-highlight p-4 rounded-xl">
+                            <i class="fa fa-gamepad text-accent mb-2"></i>
+                            <h5 class="font-medium">贪吃蛇游戏</h5>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 页脚 -->
+            <footer class="bg-dark text-white py-8">
+                <div class="container mx-auto px-4">
+                    <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400 text-sm">
+                        &copy; 2025 游龙工具箱 - 保留所有权利
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 通知提示 -->
+    <div id="notification" class="fixed bottom-4 right-4 bg-dark text-white px-4 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center">
+        <i id="notification-icon" class="fa fa-check-circle mr-2 text-green-400"></i>
+        <span id="notification-message"></span>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentPage = 'home-page';
+        let cloudFiles = JSON.parse(localStorage.getItem('cloudStorage') || '[]');
+        
+        // 贪吃蛇游戏变量
+        let snake = [];
+        let food = {};
+        let direction = 'right';
+        let nextDirection = 'right';
+        let score = 0;
+        let gameSpeed = 150;
+        let gameInterval;
+        let isGameOver = false;
+        let gridSize;
+        let snakeSize;
+        let foodSize;
+        let canvas, ctx;
+
+        // 单位转换数据
+        const unitConversions = {
+            length: {
+                units: ['米 (m)', '厘米 (cm)', '毫米 (mm)', '千米 (km)', '英寸 (in)', '英尺 (ft)', '码 (yd)', '英里 (mi)'],
+                factors: {
+                    '米 (m)': 1,
+                    '厘米 (cm)': 0.01,
+                    '毫米 (mm)': 0.001,
+                    '千米 (km)': 1000,
+                    '英寸 (in)': 0.0254,
+                    '英尺 (ft)': 0.3048,
+                    '码 (yd)': 0.9144,
+                    '英里 (mi)': 1609.34
+                }
+            },
+            weight: {
+                units: ['千克 (kg)', '克 (g)', '毫克 (mg)', '吨 (t)', '磅 (lb)', '盎司 (oz)'],
+                factors: {
+                    '千克 (kg)': 1,
+                    '克 (g)': 0.001,
+                    '毫克 (mg)': 0.000001,
+                    '吨 (t)': 1000,
+                    '磅 (lb)': 0.453592,
+                    '盎司 (oz)': 0.0283495
+                }
+            },
+            temperature: {
+                units: ['摄氏度 (°C)', '华氏度 (°F)', '开尔文 (K)'],
+                convert: function(value, fromUnit, toUnit) {
+                    if (fromUnit === toUnit) return value;
+                    
+                    // 先转换为摄氏度
+                    let celsius;
+                    switch(fromUnit) {
+                        case '摄氏度 (°C)':
+                            celsius = value;
+                            break;
+                        case '华氏度 (°F)':
+                            celsius = (value - 32) * 5 / 9;
+                            break;
+                        case '开尔文 (K)':
+                            celsius = value - 273.15;
+                            break;
+                    }
+                    
+                    // 从摄氏度转换为目标单位
+                    switch(toUnit) {
+                        case '摄氏度 (°C)':
+                            return celsius;
+                        case '华氏度 (°F)':
+                            return celsius * 9 / 5 + 32;
+                        case '开尔文 (K)':
+                            return celsius + 273.15;
+                    }
+                }
+            },
+            area: {
+                units: ['平方米 (m²)', '平方厘米 (cm²)', '平方毫米 (mm²)', '公顷 (ha)', '平方千米 (km²)', '平方英寸 (in²)', '平方英尺 (ft²)'],
+                factors: {
+                    '平方米 (m²)': 1,
+                    '平方厘米 (cm²)': 0.0001,
+                    '平方毫米 (mm²)': 0.000001,
+                    '公顷 (ha)': 10000,
+                    '平方千米 (km²)': 1000000,
+                    '平方英寸 (in²)': 0.00064516,
+                    '平方英尺 (ft²)': 0.092903
+                }
+            },
+            volume: {
+                units: ['立方米 (m³)', '立方厘米 (cm³)', '升 (L)', '毫升 (mL)', '立方英寸 (in³)', '立方英尺 (ft³)', '加仑 (gal)'],
+                factors: {
+                    '立方米 (m³)': 1,
+                    '立方厘米 (cm³)': 0.000001,
+                    '升 (L)': 0.001,
+                    '毫升 (mL)': 0.000001,
+                    '立方英寸 (in³)': 0.0000163871,
+                    '立方英尺 (ft³)': 0.0283168,
+                    '加仑 (gal)': 0.00378541
+                }
+            }
+        };
+
+        // DOM 加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化页面导航
+            initNavigation();
+            
+            // 初始化所有工具
+            initPasswordGenerator();
+            initRandomImageGenerator();
+            initCalculator();
+            initSnakeControls();
+            initUnitConverter();
+            initCloudStorage();
+            
+            // 初始化单位转换器的单位选项
+            updateUnitOptions();
+        });
+
+        // 初始化页面导航
+        function initNavigation() {
+            // 工具卡片点击事件
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const pageId = this.getAttribute('data-page');
+                    navigateTo(pageId);
+                    
+                    // 如果是贪吃蛇游戏，初始化游戏
+                    if (pageId === 'snake-game-page') {
+                        setTimeout(initSnakeGame, 300); // 等待页面过渡完成
+                    }
+                    
+                    // 如果是网盘页面，加载文件列表
+                    if (pageId === 'cloud-storage-page') {
+                        loadFileList();
+                    }
+                    
+                    // 如果是移动设备，点击后关闭菜单
+                    if (window.innerWidth < 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // 导航链接点击事件
+            document.querySelectorAll('nav a[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    navigateTo(pageId);
+                    
+                    // 如果是移动设备，点击后关闭菜单
+                    if (window.innerWidth < 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // 移动端菜单控制
+            document.getElementById('mobile-menu-btn').addEventListener('click', openMobileMenu);
+            document.getElementById('close-menu-btn').addEventListener('click', closeMobileMenu);
+            document.getElementById('mobile-menu').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // 滚动时改变导航栏样式
+            window.addEventListener('scroll', function() {
+                const navbars = document.querySelectorAll('header[id^="navbar"]');
+                navbars.forEach(navbar => {
+                    if (window.scrollY > 10) {
+                        navbar.classList.add('py-2', 'shadow');
+                        navbar.classList.remove('py-4', 'shadow-sm');
+                    } else {
+                        navbar.classList.add('py-4', 'shadow-sm');
+                        navbar.classList.remove('py-2', 'shadow');
+                    }
+                });
+            });
+        }
+
+        // 页面导航函数
+        function navigateTo(pageId) {
+            if (currentPage === pageId) return;
+            
+            // 停止任何正在运行的游戏
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = null;
+            }
+            
+            // 获取当前页面和目标页面
+            const currentPageEl = document.getElementById(currentPage);
+            const targetPageEl = document.getElementById(pageId);
+            
+            if (!targetPageEl) return;
+            
+            // 添加离开动画
+            currentPageEl.style.opacity = '0';
+            currentPageEl.style.transform = 'translateY(20px)';
+            currentPageEl.style.transition = 'all 0.3s ease';
+            
+            // 等待动画完成后切换页面显示
+            setTimeout(() => {
+                // 隐藏当前页面
+                currentPageEl.classList.add('hidden');
+                currentPageEl.style.opacity = '1';
+                currentPageEl.style.transform = 'translateY(0)';
+                
+                // 显示目标页面
+                targetPageEl.classList.remove('hidden');
+                
+                // 重置目标页面样式并添加进入动画
+                targetPageEl.style.opacity = '0';
+                targetPageEl.style.transform = 'translateY(20px)';
+                targetPageEl.style.transition = 'all 0.3s ease';
+                setTimeout(() => {
+                    targetPageEl.style.opacity = '1';
+                    targetPageEl.style.transform = 'translateY(0)';
+                }, 50);
+                
+                // 更新当前页面
+                currentPage = pageId;
+                
+                // 滚动到顶部
+                window.scrollTo(0, 0);
+            }, 300);
+        }
+
+        // 移动菜单控制
+        function openMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('mobile-menu-content').classList.remove('-translate-x-full');
+            }, 10);
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu-content').classList.add('-translate-x-full');
+            setTimeout(() => {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            }, 300);
+        }
+
+        // 显示通知
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notification-icon');
+            const messageEl = document.getElementById('notification-message');
+            
+            messageEl.textContent = message;
+            
+            if (isError) {
+                icon.className = 'fa fa-exclamation-circle mr-2 text-red-400';
+            } else {
+                icon.className = 'fa fa-check-circle mr-2 text-green-400';
+            }
+            
+            notification.classList.remove('translate-y-20', 'opacity-0');
+            notification.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-y-0', 'opacity-100');
+                notification.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // 密码生成器初始化
+        function initPasswordGenerator() {
+            const lengthSlider = document.getElementById('password-length');
+            const lengthValue = document.getElementById('length-value');
+            const generateBtn = document.getElementById('generate-password');
+            const copyBtn = document.getElementById('copy-password');
+            const passwordField = document.getElementById('generated-password');
+            
+            // 更新长度显示
+            lengthSlider.addEventListener('input', function() {
+                lengthValue.textContent = this.value;
+            });
+            
+            // 生成密码
+            generateBtn.addEventListener('click', generatePassword);
+            
+            // 复制密码
+            copyBtn.addEventListener('click', function() {
+                if (passwordField.value) {
+                    passwordField.select();
+                    navigator.clipboard.writeText(passwordField.value)
+                        .then(() => {
+                            showNotification('密码已复制到剪贴板');
+                        })
+                        .catch(err => {
+                            showNotification('复制失败，请手动复制', true);
+                            console.error('复制失败:', err);
+                        });
+                }
+            });
+            
+            // 初始生成一个密码
+            generatePassword();
+        }
+
+        // 生成密码
+        function generatePassword() {
+            const length = parseInt(document.getElementById('password-length').value);
+            const includeUppercase = document.getElementById('include-uppercase').checked;
+            const includeLowercase = document.getElementById('include-lowercase').checked;
+            const includeNumbers = document.getElementById('include-numbers').checked;
+            const includeSymbols = document.getElementById('include-symbols').checked;
+            
+            let charset = '';
+            if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+            if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (includeNumbers) charset += '0123456789';
+            if (includeSymbols) charset += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+            
+            // 确保至少选择了一种字符类型
+            if (charset === '') {
+                charset = 'abcdefghijklmnopqrstuvwxyz';
+                document.getElementById('include-lowercase').checked = true;
+            }
+            
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+            
+            document.getElementById('generated-password').value = password;
+        }
+
+        // 随机图片生成器初始化
+        function initRandomImageGenerator() {
+            const generateBtn = document.getElementById('generate-random-image');
+            const downloadBtn = document.getElementById('download-random-image');
+            
+            generateBtn.addEventListener('click', generateRandomImage);
+            downloadBtn.addEventListener('click', downloadRandomImage);
+            
+            // 初始生成一张图片
+            generateRandomImage();
+        }
+
+        // 生成随机图片
+        function generateRandomImage() {
+            const width = document.getElementById('random-width').value || 600;
+            const height = document.getElementById('random-height').value || 400;
+            const category = document.getElementById('image-category').value;
+            
+            // 生成随机ID
+            const randomId = Math.floor(Math.random() * 1000);
+            
+            // 构建图片URL
+            let url = `https://picsum.photos/id/${randomId}/${width}/${height}`;
+            if (category) {
+                url = `https://picsum.photos/seed/${category}${randomId}/${width}/${height}`;
+            }
+            
+            // 显示图片
+            const container = document.getElementById('random-image-container');
+            container.innerHTML = '<div class="text-ios-gray"><i class="fa fa-spinner fa-spin mr-2"></i>加载中...</div>';
+            
+            const img = new Image();
+            img.onload = function() {
+                container.innerHTML = '';
+                img.alt = '随机生成的图片';
+                img.className = 'max-w-full max-h-[300px] mx-auto rounded-lg';
+                img.id = 'generated-random-image';
+                container.appendChild(img);
+                document.getElementById('download-random-image').classList.remove('hidden');
+            };
+            img.src = url;
+        }
+
+        // 下载随机图片
+        function downloadRandomImage() {
+            const img = document.getElementById('generated-random-image');
+            if (img) {
+                const link = document.createElement('a');
+                link.download = 'random-image.jpg';
+                link.href = img.src;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showNotification('图片已下载');
+            }
+        }
+
+        // 计算器初始化
+        function initCalculator() {
+            // 初始化显示
+            document.getElementById('calc-display').value = '0';
+        }
+
+        // 计算器函数
+        function calcNumber(num) {
+            const display = document.getElementById('calc-display');
+            if (display.value === '0' && num !== '.') {
+                display.value = num;
+            } else if (num === '.' && display.value.includes('.')) {
+                // 避免多个小数点
+                return;
+            } else {
+                display.value += num;
+            }
+        }
+
+        function calcOperator(op) {
+            const display = document.getElementById('calc-display');
+            const history = document.getElementById('calc-history');
+            const currentValue = display.value;
+            
+            if (op === '±') {
+                // 正负号切换
+                display.value = (parseFloat(currentValue) * -1).toString();
+                return;
+            }
+            
+            if (op === '%') {
+                // 百分比计算
+                display.value = (parseFloat(currentValue) / 100).toString();
+                return;
+            }
+            
+            // 其他运算符
+            if (!['+', '-', '*', '/'].some(operator => history.value.endsWith(operator))) {
+                history.value = currentValue + op;
+                display.value = '0';
+            }
+        }
+
+        function calcEquals() {
+            const display = document.getElementById('calc-display');
+            const history = document.getElementById('calc-history');
+            const expression = history.value + display.value;
+            
+            try {
+                // 替换×为*，÷为/以符合JavaScript语法
+                const result = eval(expression.replace('×', '*').replace('÷', '/'));
+                // 处理小数位数，最多显示10位
+                const formattedResult = Number.isInteger(result) ? result : result.toFixed(10).replace(/0+$/, '').replace(/\.$/, '');
+                display.value = formattedResult;
+                history.value = '';
+            } catch (e) {
+                display.value = '错误';
+            }
+        }
+
+        function calcClear() {
+            document.getElementById('calc-display').value = '0';
+            document.getElementById('calc-history').value = '';
+        }
+
+        // 初始化贪吃蛇游戏控制
+        function initSnakeControls() {
+            // 导航栏重置按钮
+            document.getElementById('restartButtonNav').addEventListener('click', restartGame);
+            
+            // 游戏结束重置按钮
+            document.getElementById('restartButton').addEventListener('click', restartGame);
+            
+            // 开始游戏按钮
+            document.getElementById('startButton').addEventListener('click', startGame);
+            
+            // 移动设备控制按钮
+            document.getElementById('mobile-up').addEventListener('click', () => changeDirection('up'));
+            document.getElementById('mobile-down').addEventListener('click', () => changeDirection('down'));
+            document.getElementById('mobile-left').addEventListener('click', () => changeDirection('left'));
+            document.getElementById('mobile-right').addEventListener('click', () => changeDirection('right'));
+            
+            // 键盘控制
+            document.addEventListener('keydown', handleKeyPress);
+        }
+
+        // 初始化贪吃蛇游戏
+        function initSnakeGame() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            
+            // 设置canvas尺寸
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // 重置游戏状态
+            resetGame();
+        }
+
+        // 调整canvas尺寸
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            const containerHeight = containerWidth * 0.75; // 4:3 比例
+            
+            canvas.width = containerWidth;
+            canvas.height = containerHeight;
+            
+            // 重新计算网格和元素大小
+            gridSize = Math.max(10, Math.floor(containerWidth / 40)); // 40列网格
+            snakeSize = gridSize - 1; // 留一点间隙
+            foodSize = gridSize - 1;
+            
+            // 如果游戏正在进行，重新绘制
+            if (snake.length > 0 && !isGameOver) {
+                drawGame();
+            }
+        }
+
+        // 重置游戏
+        function resetGame() {
+            // 重置蛇的位置和方向
+            const centerX = Math.floor(canvas.width / (2 * gridSize)) * gridSize;
+            const centerY = Math.floor(canvas.height / (2 * gridSize)) * gridSize;
+            
+            snake = [
+                {x: centerX, y: centerY},
+                {x: centerX - gridSize, y: centerY},
+                {x: centerX - gridSize * 2, y: centerY}
+            ];
+            
+            direction = 'right';
+            nextDirection = 'right';
+            score = 0;
+            gameSpeed = 150;
+            
+            // 更新分数显示
+            document.getElementById('gameScore').textContent = score;
+            
+            // 生成食物
+            generateFood();
+            
+            // 重置游戏状态
+            isGameOver = false;
+            document.getElementById('gameOver').classList.add('hidden');
+            document.getElementById('gameStart').classList.remove('hidden');
+            
+            // 清除游戏间隔
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = null;
+            }
+            
+            // 绘制初始状态
+            drawGame();
+        }
+
+        // 开始游戏
+        function startGame() {
+            document.getElementById('gameStart').classList.add('hidden');
+            
+            if (gameInterval) {
+                clearInterval(gameInterval);
+            }
+            
+            gameInterval = setInterval(updateGame, gameSpeed);
+        }
+
+        // 重新开始游戏
+        function restartGame() {
+            resetGame();
+            startGame();
+        }
+
+        // 处理键盘输入
+        function handleKeyPress(e) {
+            switch(e.key) {
+                case 'ArrowUp':
+                    changeDirection('up');
+                    break;
+                case 'ArrowDown':
+                    changeDirection('down');
+                    break;
+                case 'ArrowLeft':
+                    changeDirection('left');
+                    break;
+                case 'ArrowRight':
+                    changeDirection('right');
+                    break;
+                case ' ': // 空格键重新开始游戏
+                    if (isGameOver) {
+                        restartGame();
+                    }
+                    break;
+            }
+        }
+
+        // 改变方向
+        function changeDirection(newDirection) {
+            // 防止180度转向
+            if (
+                (newDirection === 'up' && direction !== 'down') ||
+                (newDirection === 'down' && direction !== 'up') ||
+                (newDirection === 'left' && direction !== 'right') ||
+                (newDirection === 'right' && direction !== 'left')
+            ) {
+                nextDirection = newDirection;
+            }
+        }
+
+        // 生成食物
+        function generateFood() {
+            // 确保食物不会出现在蛇身上
+            let onSnake;
+            
+            do {
+                onSnake = false;
+                food.x = Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize;
+                food.y = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
+                
+                // 检查食物是否出现在蛇身上
+                for (let segment of snake) {
+                    if (segment.x === food.x && segment.y === food.y) {
+                        onSnake = true;
+                        break;
+                    }
+                }
+            } while (onSnake);
+        }
+
+        // 更新游戏状态
+        function updateGame() {
+            // 更新方向
+            direction = nextDirection;
+            
+            // 获取蛇头位置
+            const head = {x: snake[0].x, y: snake[0].y};
+            
+            // 根据方向移动蛇头
+            switch(direction) {
+                case 'up':
+                    head.y -= gridSize;
+                    break;
+                case 'down':
+                    head.y += gridSize;
+                    break;
+                case 'left':
+                    head.x -= gridSize;
+                    break;
+                case 'right':
+                    head.x += gridSize;
+                    break;
+            }
+            
+            // 检查碰撞
+            // 边界碰撞
+            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                gameOver();
+                return;
+            }
+            
+            // 自身碰撞
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === head.x && snake[i].y === head.y) {
+                    gameOver();
+                    return;
+                }
+            }
+            
+            // 将新头部添加到蛇
+            snake.unshift(head);
+            
+            // 检查是否吃到食物
+            if (head.x === food.x && head.y === food.y) {
+                // 增加分数
+                score += 10;
+                document.getElementById('gameScore').textContent = score;
+                
+                // 生成新食物
+                generateFood();
+                
+                // 每吃5个食物增加一次速度
+                if (score % 50 === 0 && gameSpeed > 60) {
+                    gameSpeed -= 10;
+                    clearInterval(gameInterval);
+                    gameInterval = setInterval(updateGame, gameSpeed);
+                }
+            } else {
+                // 如果没吃到食物，移除尾部
+                snake.pop();
+            }
+            
+            // 绘制游戏
+            drawGame();
+        }
+
+        // 绘制游戏
+        function drawGame() {
+            // 清空画布
+            ctx.fillStyle = '#1a202c';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制网格背景
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            
+            // 绘制水平线
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // 绘制垂直线
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            // 绘制蛇
+            snake.forEach((segment, index) => {
+                // 蛇头使用不同颜色
+                if (index === 0) {
+                    ctx.fillStyle = '#007AFF'; // iOS蓝
+                } else {
+                    // 蛇身使用渐变色
+                    const colorIndex = index % 5;
+                    const colors = ['#4F46E5', '#4338CA', '#3730A3', '#312E81', '#1E1B4B'];
+                    ctx.fillStyle = colors[colorIndex];
+                }
+                
+                ctx.fillRect(segment.x, segment.y, snakeSize, snakeSize);
+            });
+            
+            // 绘制食物
+            ctx.fillStyle = '#EF4444'; // 红色食物
+            ctx.fillRect(food.x, food.y, foodSize, foodSize);
+        }
+
+        // 游戏结束
+        function gameOver() {
+            isGameOver = true;
+            clearInterval(gameInterval);
+            gameInterval = null;
+            
+            // 显示游戏结束画面
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').classList.remove('hidden');
+        }
+
+        // 初始化本地网盘功能
+        function initCloudStorage() {
+            const fileInput = document.getElementById('file-input');
+            const fileUploadArea = document.getElementById('file-upload-area');
+            const uploadNewFileBtn = document.getElementById('upload-new-file');
+            
+            // 上传按钮点击事件
+            uploadNewFileBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            // 文件选择事件
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // 拖放功能
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.add('border-primary');
+            });
+            
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('border-primary');
+            });
+            
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.classList.remove('border-primary');
+                
+                if (e.dataTransfer.files.length) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            // 加载文件列表
+            loadFileList();
+        }
+
+        // 处理文件选择
+        function handleFileSelect(e) {
+            if (e.target.files.length) {
+                handleFiles(e.target.files);
+            }
+        }
+
+        // 处理文件
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    // 创建文件对象
+                    const fileObject = {
+                        id: Date.now() + Math.floor(Math.random() * 1000),
+                        name: file.name,
+                        type: file.type,
+                        size: formatFileSize(file.size),
+                        content: e.target.result,
+                        date: new Date().toISOString()
+                    };
+                    
+                    // 保存到本地存储
+                    cloudFiles.push(fileObject);
+                    localStorage.setItem('cloudStorage', JSON.stringify(cloudFiles));
+                    
+                    // 更新文件列表
+                    loadFileList();
+                    showNotification(`文件 "${file.name}" 已保存`);
+                };
+                
+                // 对于图片，读取为DataURL
+                if (file.type.startsWith('image/')) {
+                    reader.readAsDataURL(file);
+                } else {
+                    // 对于其他文件类型，也使用DataURL
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 加载文件列表
+        function loadFileList() {
+            const fileListEl = document.getElementById('file-list');
+            const emptyStateEl = document.getElementById('empty-state');
+            
+            // 清空现有列表
+            fileListEl.innerHTML = '';
+            
+            if (cloudFiles.length === 0) {
+                // 显示空状态
+                emptyStateEl.classList.remove('hidden');
+                fileListEl.classList.add('hidden');
+                return;
+            }
+            
+            // 隐藏空状态，显示文件列表
+            emptyStateEl.classList.add('hidden');
+            fileListEl.classList.remove('hidden');
+            
+            // 按日期排序，最新的在前
+            cloudFiles.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // 添加文件项
+            cloudFiles.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-3 bg-ios-highlight rounded-xl ios-transition';
+                
+                // 确定文件图标
+                let fileIcon = 'fa-file-o';
+                if (file.type.startsWith('image/')) {
+                    fileIcon = 'fa-file-image-o';
+                } else if (file.type.startsWith('text/')) {
+                    fileIcon = 'fa-file-text-o';
+                } else if (file.type.includes('pdf')) {
+                    fileIcon = 'fa-file-pdf-o';
+                } else if (file.type.includes('audio/')) {
+                    fileIcon = 'fa-file-audio-o';
+                } else if (file.type.includes('video/')) {
+                    fileIcon = 'fa-file-video-o';
+                }
+                
+                // 格式化日期
+                const formattedDate = new Date(file.date).toLocaleString();
+                
+                fileItem.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fa ${fileIcon} text-primary mr-3 text-xl"></i>
+                        <div>
+                            <div class="font-medium truncate max-w-[200px] md:max-w-[300px]">${file.name}</div>
+                            <div class="text-xs text-ios-gray">${file.size} · ${formattedDate}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="text-primary hover:text-primary/80 p-2 ios-transition" onclick="downloadFile(${file.id})">
+                            <i class="fa fa-download"></i>
+                        </button>
+                        <button class="text-ios-gray hover:text-red-500 p-2 ios-transition" onclick="deleteFile(${file.id})">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </div>
+                `;
+                
+                fileListEl.appendChild(fileItem);
+            });
+        }
+
+        // 下载文件
+        function downloadFile(fileId) {
+            const file = cloudFiles.find(f => f.id === fileId);
+            if (!file) return;
+            
+            const link = document.createElement('a');
+            link.download = file.name;
+            link.href = file.content;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification(`文件 "${file.name}" 已下载`);
+        }
+
+        // 删除文件
+        function deleteFile(fileId) {
+            const fileIndex = cloudFiles.findIndex(f => f.id === fileId);
+            if (fileIndex === -1) return;
+            
+            const fileName = cloudFiles[fileIndex].name;
+            
+            // 确认删除
+            if (confirm(`确定要删除文件 "${fileName}" 吗？`)) {
+                // 从数组中删除
+                cloudFiles.splice(fileIndex, 1);
+                
+                // 更新本地存储
+                localStorage.setItem('cloudStorage', JSON.stringify(cloudFiles));
+                
+                // 更新文件列表
+                loadFileList();
+                showNotification(`文件 "${fileName}" 已删除`);
+            }
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 单位转换器初始化
+        function initUnitConverter() {
+            const conversionType = document.getElementById('conversion-type');
+            const convertBtn = document.getElementById('convert-btn');
+            const fromValue = document.getElementById('from-value');
+            
+            // 当转换类型改变时更新单位选项
+            conversionType.addEventListener('change', updateUnitOptions);
+            
+            // 当输入值改变时自动转换
+            fromValue.addEventListener('input', performConversion);
+            
+            // 当单位改变时自动转换
+            document.getElementById('from-unit').addEventListener('change', performConversion);
+            document.getElementById('to-unit').addEventListener('change', performConversion);
+            
+            // 转换按钮点击事件
+            convertBtn.addEventListener('click', performConversion);
+        }
+
+        // 更新单位选项
+        function updateUnitOptions() {
+            const type = document.getElementById('conversion-type').value;
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            
+            // 清空现有选项
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            // 添加新选项
+            unitConversions[type].units.forEach(unit => {
+                const fromOption = document.createElement('option');
+                fromOption.value = unit;
+                fromOption.textContent = unit;
+                
+                const toOption = document.createElement('option');
+                toOption.value = unit;
+                toOption.textContent = unit;
+                
+                fromUnit.appendChild(fromOption);
+                toUnit.appendChild(toOption);
+            });
+            
+            // 默认选择不同的单位
+            if (unitConversions[type].units.length > 1) {
+                toUnit.selectedIndex = 1;
+            }
+            
+            // 执行转换
+            performConversion();
+        }
+
+        // 执行单位转换
+        function performConversion() {
+            const type = document.getElementById('conversion-type').value;
+            const fromValue = parseFloat(document.getElementById('from-value').value) || 0;
+            const fromUnit = document.getElementById('from-unit').value;
+            const toUnit = document.getElementById('to-unit').value;
+            const toValueEl = document.getElementById('to-value');
+            
+            let result;
+            
+            if (type === 'temperature') {
+                // 温度转换使用特殊方法
+                result = unitConversions[type].convert(fromValue, fromUnit, toUnit);
+            } else {
+                // 其他类型使用因子转换
+                const fromFactor = unitConversions[type].factors[fromUnit];
+                const toFactor = unitConversions[type].factors[toUnit];
+                
+                result = (fromValue * fromFactor) / toFactor;
+            }
+            
+            // 格式化结果，最多显示6位小数
+            toValueEl.value = Number.isInteger(result) ? result : result.toFixed(6).replace(/0+$/, '').replace(/\.$/, '');
+        }
+    </script>
+</body>
+</html>
